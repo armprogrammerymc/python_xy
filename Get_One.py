@@ -1,3 +1,4 @@
+#coding=utf-8
 import argparse
 import re
 from multiprocessing import Pool
@@ -15,6 +16,7 @@ def get_url(num):
     return root_url + '/one/' + str(num)
 
 def get_urls(num):
+    #map
     urls = map(get_url, range(100,100+num))
     return urls
 
@@ -34,6 +36,7 @@ def get_data(url):
 def download_img(imgUrl, i):
     img = requests.get(imgUrl,stream=True)
     img_name = "one" + str(i) + ".jpg"
+    #get current work director
     base_dir = os.getcwd() + "//"
     with open(os.path.join(base_dir,img_name),'wb') as img_file:
       for chunk in img.iter_content(chunk_size=1024):
@@ -56,7 +59,9 @@ if __name__=='__main__':
       download_img(dataList[i]["imgUrl"],i)
   end = time.time()
   print 'use: %.2f s' % (end - start)
+  # 转存
   jsonData = json.dumps({'data':dataList},ensure_ascii=False,indent=2)
   print "liubei: " + jsonData
+  #文件io操作
   with codecs.open('data.txt', 'w', 'utf-8') as outfile:
     json.dump(jsonData, outfile, ensure_ascii=False)
